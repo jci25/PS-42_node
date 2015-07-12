@@ -17,6 +17,13 @@ io.on('connection', function(socket){
     //io.emit('chat message', msg);
     console.log(msg);
   });
+  socket.on('getTables', function(msg){
+    io.emit('getTables', msg);
+  });
+  socket.on('table_names', function(msg){
+    console.log(msg);
+    io.emit('table_names', msg);
+  });
 });
 
 http.listen(8888, function(){
@@ -31,16 +38,17 @@ var serialport = new SerialPort("/dev/ttyACM0", {
 serialport.on('open', function(){
   console.log('Serial Port Opend');
   serialport.on('data', function(data){
+      console.log(data);
       io.emit('arduino', data);
-      //console.log(data);
+      console.log(data);
   });
 });
 
 //for testing, we're just going to send data to the client every second
 setInterval( function() {
 
-  exec("python ~/NEMO/python/PS-42_python/mav_reader.py", function(error, stdout, stderr){
+  exec("python /home/pi/NEMO/python/PS-42_python/mav_reader.py", function(error, stdout, stderr){
   	io.emit('mav', stdout);
   });
 
-}, 1000);
+}, 2400);
